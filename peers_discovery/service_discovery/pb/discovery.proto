@@ -1,0 +1,33 @@
+syntax = "proto3" ;
+
+option go_package = "github.com/sebastianopriscan/GNCFD_demos/peer_discovery/service_discovery/pb_go";
+
+message Session {
+    string sessID = 1 ;
+    string kind = 2 ;
+}
+
+message Peer {
+    string guid = 1 ;
+    string addr = 2 ;
+}
+
+message ServiceQuery {
+
+}
+
+message JoinResult {
+    bool res = 1 ;
+}
+
+message JoinInfo {
+    Peer peer = 1 ;
+    Session session = 2 ;
+}
+
+service PeerDiscovery {
+    rpc GetSessions(ServiceQuery) returns (stream Session) ;
+    rpc GetPeer(Session) returns (Peer) ;
+    rpc GetPeers(Session) returns (stream Peer) ;
+    rpc JoinSession(JoinInfo) returns (JoinResult) ;
+}

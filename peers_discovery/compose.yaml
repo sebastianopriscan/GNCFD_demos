@@ -1,0 +1,17 @@
+services:
+  discoverer:
+    build:
+      context: .
+      dockerfile: Discoverer.dockerfile
+    networks:
+      - gossip_demonet
+
+  peer:
+    build:
+      context: .
+      dockerfile: Peer.dockerfile
+    networks:
+      - gossip_demonet
+
+networks:
+  gossip_demonet : {}
