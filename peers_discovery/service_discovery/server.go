@@ -108,5 +108,7 @@ func (sds *ServiceDiscoveryServer) JoinSession(ctx context.Context, join *pb_go.
 
 	need_sess.Peers = append(need_sess.Peers, &Peer{Id: peerID, Addr: join.Peer.Addr})
 
+	log.Printf("peer with GUID %v and addr %s joined the session\n", join.Peer.Guid, join.Peer.Addr)
+
 	return &pb_go.JoinResult{Res: true}, nil
 }

@@ -7,11 +7,17 @@ services:
       - gossip_demonet
 
   peer:
+    depends_on:
+      - discoverer
     build:
       context: .
       dockerfile: Peer.dockerfile
     networks:
       - gossip_demonet
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: dnssr
 
 networks:
   gossip_demonet : {}

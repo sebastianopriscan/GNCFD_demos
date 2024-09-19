@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"os"
 	"strings"
 	"time"
 
@@ -34,11 +35,26 @@ var ip string
 var peerMap gossip.LockedMap[guid.Guid, gossip.CommunicationChannel]
 var coreMap gossip.LockedMap[guid.Guid, core.GNCFDCore]
 
+var discover_addr, discover_port string
+var my_port string
+
+func extractValueFromEnv(variable string) string {
+
+	valueString, present := os.LookupEnv(variable)
+
+	if !present {
+		log.Println("Bad configuration")
+		os.Exit(1)
+	}
+
+	return valueString
+}
+
 func getSession() (*servicediscovery.Session, error) {
 
 	var err error
 	creds := grpc.WithTransportCredentials(insecure.NewCredentials())
-	clientConn, err = grpc.NewClient("127.0.0.1:6449", creds)
+	clientConn, err = grpc.NewClient(fmt.Sprintf("%s:%s", discover_addr, discover_port), creds)
 	if err != nil {
 		return nil, fmt.Errorf("error in creating client connection, details: %s", err)
 	}
@@ -129,6 +145,10 @@ func getMyAddr() error {
 
 func main() {
 
+	my_port = extractValueFromEnv("CLIENT_SERV_PORT")
+	discover_addr = extractValueFromEnv("DISCOVERER_ADDR")
+	discover_port = extractValueFromEnv("DISCOVERER_PORT")
+
 	err := getMyAddr()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -156,7 +176,7 @@ func main() {
 		return
 	}
 
-	serverDesc, err := endpoints.ActivateVivaldiGRPCServer("vivaldicore00", "0.0.0.0:4556", "tcp", nil, &coreMap)
+	serverDesc, err := endpoints.ActivateVivaldiGRPCServer("vivaldicore00", fmt.Sprintf("0.0.0.0:%s", my_port), "tcp", nil, &coreMap)
 	if err != nil {
 		log.Fatalf("error activating GRPC server, details: %s", err)
 		return
@@ -168,11 +188,25 @@ func main() {
 	gossiper.StartGossiping()
 
 	err = registerToSession(&pb_go.Session{SessID: sess.Id.String(), Kind: sess.Kind},
-		&pb_go.Peer{Guid: myGuid.String(), Addr: fmt.Sprintf("%s:4556", ip)})
+		&pb_go.Peer{Guid: myGuid.String(), Addr: fmt.Sprintf("%s:%s", ip, my_port)})
 	if err != nil {
 		log.Fatalf("error registering to GRPC session, details: %s", err)
 		return
 	}
+
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			analyze_vivaldi_core(gncfdCore)
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			gossiper.InsertGossip()
+		}
+	}()
 
 	for {
 		newP, err := getPeer(&pb_go.Session{SessID: sess.Id.String(), Kind: sess.Kind})
@@ -201,6 +235,10 @@ func main() {
 
 		if errs {
 			log.Println("error creating communication channel")
+		}
+
+		if !errs && !ok {
+			log.Printf("added new peer with GUID %v and addr %s", newP.Id, newP.Addr)
 		}
 
 		time.Sleep(time.Second)
