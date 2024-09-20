@@ -12,11 +12,12 @@ import (
 	"time"
 
 	"github.com/sebastianopriscan/GNCFD/core"
-	"github.com/sebastianopriscan/GNCFD/core/guid"
 	"github.com/sebastianopriscan/GNCFD/core/impl/vivaldi"
 	"github.com/sebastianopriscan/GNCFD/core/nvs"
 	"github.com/sebastianopriscan/GNCFD/gossip"
 	"github.com/sebastianopriscan/GNCFD/gossip/rpc/grpc/vivaldi/endpoints"
+	"github.com/sebastianopriscan/GNCFD/utils/guid"
+	lockedmap "github.com/sebastianopriscan/GNCFD/utils/locked_map"
 	servicediscovery "github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery"
 	"github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery/pb_go"
 	"google.golang.org/grpc"
@@ -32,8 +33,8 @@ var gossiper *gossip.BlindCounterGossiper
 
 var ip string
 
-var peerMap gossip.LockedMap[guid.Guid, gossip.CommunicationChannel]
-var coreMap gossip.LockedMap[guid.Guid, core.GNCFDCore]
+var peerMap lockedmap.LockedMap[guid.Guid, gossip.CommunicationChannel]
+var coreMap lockedmap.LockedMap[guid.Guid, core.GNCFDCore]
 
 var discover_addr, discover_port string
 var my_port string
@@ -155,8 +156,8 @@ func main() {
 		return
 	}
 
-	peerMap = gossip.LockedMap[guid.Guid, gossip.CommunicationChannel]{Map: make(map[guid.Guid]gossip.CommunicationChannel)}
-	coreMap = gossip.LockedMap[guid.Guid, core.GNCFDCore]{Map: make(map[guid.Guid]core.GNCFDCore)}
+	peerMap = lockedmap.LockedMap[guid.Guid, gossip.CommunicationChannel]{Map: make(map[guid.Guid]gossip.CommunicationChannel)}
+	coreMap = lockedmap.LockedMap[guid.Guid, core.GNCFDCore]{Map: make(map[guid.Guid]core.GNCFDCore)}
 
 	myGuid, err := guid.GenerateGUID()
 	if err != nil {

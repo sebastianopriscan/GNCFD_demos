@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/sebastianopriscan/GNCFD/core/guid"
+	"github.com/sebastianopriscan/GNCFD/utils/guid"
 	servicediscovery "github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery"
 	"github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery/pb_go"
 	"google.golang.org/grpc"

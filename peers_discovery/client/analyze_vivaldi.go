@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/sebastianopriscan/GNCFD/core"
@@ -23,11 +24,14 @@ func analyze_vivaldi_core(core core.GNCFDCore) {
 	}
 
 	for gd, coor := range viv_meta.Data {
-		log.Printf("Loop %d\n\t GUID: %v\n\tCoors:\n", loops, gd)
+		mssg := ""
+		mssg += fmt.Sprintf("Loop %d\n\t GUID: %v\n\tFailed: %v\n\tCoors:\n", loops, coor.IsFailed, gd)
 
 		for _, coor := range coor.Coords {
-			log.Printf("\t\t%v\n", coor)
+			mssg += fmt.Sprintf("\t\t%v\n", coor)
 		}
+
+		log.Println(mssg)
 	}
 
 	loops = loops + 1

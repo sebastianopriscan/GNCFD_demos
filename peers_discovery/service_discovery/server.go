@@ -7,7 +7,7 @@ import (
 	"log"
 	"math/rand"
 
-	"github.com/sebastianopriscan/GNCFD/core/guid"
+	"github.com/sebastianopriscan/GNCFD/utils/guid"
 	"github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery/pb_go"
 )
 
