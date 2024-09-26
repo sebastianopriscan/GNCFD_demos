@@ -11,6 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"net/http"
+	_ "net/http/pprof"
+
 	"github.com/sebastianopriscan/GNCFD/core"
 	"github.com/sebastianopriscan/GNCFD/core/impl/vivaldi"
 	"github.com/sebastianopriscan/GNCFD/core/nvs"
@@ -121,7 +124,7 @@ func createCore(session *servicediscovery.Session, me *guid.Guid) error {
 
 	myCoords := make([]float64, dim)
 
-	gncfdCore, err = vivaldi.NewVivaldiCore(*me, myCoords, space, 0.4, 0.4)
+	gncfdCore, err = vivaldi.NewVivaldiCore(*me, myCoords, space, 0.001, 0.001)
 	if err != nil {
 		return fmt.Errorf("error creating core, details: %s", err)
 	}
@@ -145,6 +148,13 @@ func getMyAddr() error {
 }
 
 func main() {
+
+	go func() {
+		_, present := os.LookupEnv("PPROF")
+		if present {
+			log.Println(http.ListenAndServe("localhost:6060", nil))
+		}
+	}()
 
 	my_port = extractValueFromEnv("CLIENT_SERV_PORT")
 	discover_addr = extractValueFromEnv("DISCOVERER_ADDR")

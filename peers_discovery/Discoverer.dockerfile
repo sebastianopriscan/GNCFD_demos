@@ -8,6 +8,8 @@ COPY server/ /home/peers_discovery/server
 
 WORKDIR /home/peers_discovery
 
-RUN go build server/serverMain.go
+ARG RELEASE=
+
+RUN go build ${RELEASE} server/serverMain.go
 
 CMD [ "./serverMain" ]

@@ -25,7 +25,7 @@ func analyze_vivaldi_core(core core.GNCFDCore) {
 
 	for gd, coor := range viv_meta.Data {
 		mssg := ""
-		mssg += fmt.Sprintf("Loop %d\n\t GUID: %v\n\tFailed: %v\n\tCoors:\n", loops, coor.IsFailed, gd)
+		mssg += fmt.Sprintf("Loop %d\n\t GUID: %v\n\tFailed: %v\n\tCoors:\n", loops, gd, coor.IsFailed)
 
 		for _, coor := range coor.Coords {
 			mssg += fmt.Sprintf("\t\t%v\n", coor)

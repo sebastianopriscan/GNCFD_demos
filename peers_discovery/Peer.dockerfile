@@ -8,6 +8,8 @@ COPY client/ /home/peers_discovery/client
 
 WORKDIR /home/peers_discovery
 
-RUN go build client/clientMain.go client/analyze_vivaldi.go
+ARG RELEASE=
+
+RUN go build ${RELEASE} client/clientMain.go client/analyze_vivaldi.go
 
 CMD [ "./clientMain" ]
