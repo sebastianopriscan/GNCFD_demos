@@ -1,0 +1,31 @@
+services:
+  discoverer:
+    build:
+      context: .
+      dockerfile: Discoverer.dockerfile
+      args:
+        - RELEASE=-tags release
+    networks:
+      - gossip_demonet
+    env_file:
+      - .env_compose
+
+  peer:
+    depends_on:
+      - discoverer
+    build:
+      context: .
+      dockerfile: Peer.dockerfile
+      args:
+        - RELEASE=-tags release
+    networks:
+      - gossip_demonet
+    deploy:
+      mode: replicated
+      replicas: 10
+      endpoint_mode: dnssr
+    env_file:
+      - .env_compose
+
+networks:
+  gossip_demonet : {}

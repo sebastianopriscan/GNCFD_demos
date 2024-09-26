@@ -1,0 +1,27 @@
+services:
+  discoverer_debug:
+    build:
+      context: .
+      dockerfile: Discoverer.dockerfile
+    networks:
+      - gossip_demonet_debug
+    env_file:
+      - .env_compose_debug
+
+  peer_debug:
+    depends_on:
+      - discoverer_debug
+    build:
+      context: .
+      dockerfile: Peer.dockerfile
+    networks:
+      - gossip_demonet_debug
+    deploy:
+      mode: replicated
+      replicas: 10
+      endpoint_mode: dnssr
+    env_file:
+      - .env_compose_debug
+
+networks:
+  gossip_demonet_debug : {}
