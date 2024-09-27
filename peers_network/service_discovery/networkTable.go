@@ -25,4 +25,5 @@ var NetworkTable map[int][]int = map[int][]int{
 	8:  {3, 4},
 	9:  {10, 5},
 	10: {9, 5},
+	11: {6},
 }
