@@ -167,6 +167,8 @@ func getMyAddr() error {
 
 func main() {
 
+	time.Sleep(3 * time.Second)
+
 	go func() {
 		_, present := os.LookupEnv("PPROF")
 		if present {
@@ -211,7 +213,7 @@ func main() {
 		return
 	}
 
-	gossiper = gossip.NewBlindCounterGossiper(&peerMap, gncfdCore, 2, 2)
+	gossiper = gossip.NewBlindCounterGossiper(&peerMap, gncfdCore, 2, 10)
 	gossiper.ObserveSubject(serverDesc.VivServ)
 
 	gossiper.StartGossiping()
@@ -225,7 +227,7 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(5 * time.Second)
+			time.Sleep(5 * time.Minute)
 			analyze_vivaldi_core(gncfdCore)
 		}
 	}()

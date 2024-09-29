@@ -1,4 +1,4 @@
-.PHONY : proto-discovery debug-server debug-client release-server release-client
+.PHONY : proto-discovery debug-server debug-client release-server release-client release-compose-scratch
 
 module := "github.com/sebastianopriscan/GNCFD_demos/peer_discovery"
 
@@ -19,3 +19,7 @@ release-server :
 
 release-client :
 	env $(shell cat .env | while read line ; do echo -n "$$line "; done) CLIENT_SERV_PORT=$(CL_PORT) go run -tags release client/clientMain.go client/analyze_vivaldi.go 
+
+release-compose-scratch :
+	-docker image rm peers_network-peer:latest peers_network-discoverer:latest
+	docker compose up -d

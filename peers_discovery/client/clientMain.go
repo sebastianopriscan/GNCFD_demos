@@ -149,6 +149,8 @@ func getMyAddr() error {
 
 func main() {
 
+	time.Sleep(3 * time.Second)
+
 	go func() {
 		_, present := os.LookupEnv("PPROF")
 		if present {

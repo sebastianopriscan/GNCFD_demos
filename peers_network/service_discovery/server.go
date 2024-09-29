@@ -156,7 +156,7 @@ func (sds *ServiceDiscoveryServer) JoinSession(ctx context.Context, join *pb_go.
 	}
 
 	Mu.Lock()
-	if LastGiven == 10 {
+	if LastGiven == 11 {
 		return &pb_go.JoinResult{Res: false}, nil
 	}
 
