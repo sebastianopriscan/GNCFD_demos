@@ -2,7 +2,7 @@ module github.com/sebastianopriscan/GNCFD_demos/peers_network
 
 go 1.22.5
 
-replace github.com/sebastianopriscan/GNCFD => ../lib/GNCFD/src
+replace github.com/sebastianopriscan/GNCFD => ../lib/GNCFD
 
 require (
 	github.com/sebastianopriscan/GNCFD v0.0.0-20240919161833-abaee130b169
