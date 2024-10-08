@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple systemd service for GNCFD discovery demo discovery service startup.
+
+[Service]
+Type=simple
+User=ec2-user
+Group=ec2-user
+EnvironmentFile=/home/ec2-user/.bashrc
+WorkingDirectory=/home/ec2-user/GNCFD_demos/peers_discovery
+ExecStart=/bin/bash -i -c 'go run server/serverMain.go'
+
+[Install]
+WantedBy=multi-user.target
