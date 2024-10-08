@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple systemd service for GNCFD network demo client service startup.
+
+[Service]
+Type=simple
+User=ec2-user
+Group=ec2-user
+EnvironmentFile=/home/ec2-user/.bashrc
+WorkingDirectory=/home/ec2-user/GNCFD_demos/peers_network
+ExecStart=/bin/bash -i -c 'go run client/clientMain.go client/analyze_vivaldi.go'
+
+[Install]
+WantedBy=multi-user.target
