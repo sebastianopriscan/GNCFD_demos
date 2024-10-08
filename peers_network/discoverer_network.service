@@ -5,7 +5,7 @@ Description=Simple systemd service for GNCFD network demo discovery service star
 Type=simple
 User=ec2-user
 Group=ec2-user
-EnvironmentFile=/home/ec2-user/.bashrc
+EnvironmentFile=/home/ec2-user/.bash_profile
 WorkingDirectory=/home/ec2-user/GNCFD_demos/peers_network
 ExecStart=/bin/bash -i -c 'go run server/serverMain.go'
 
