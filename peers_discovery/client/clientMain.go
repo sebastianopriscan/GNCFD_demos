@@ -14,11 +14,12 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 
+	"github.com/sebastianopriscan/GNCFD/communication"
+	"github.com/sebastianopriscan/GNCFD/communication/rpc/grpc/vivaldi/endpoints"
 	"github.com/sebastianopriscan/GNCFD/core"
 	"github.com/sebastianopriscan/GNCFD/core/impl/vivaldi"
 	"github.com/sebastianopriscan/GNCFD/core/nvs"
 	"github.com/sebastianopriscan/GNCFD/gossip"
-	"github.com/sebastianopriscan/GNCFD/gossip/rpc/grpc/vivaldi/endpoints"
 	"github.com/sebastianopriscan/GNCFD/utils/guid"
 	lockedmap "github.com/sebastianopriscan/GNCFD/utils/locked_map"
 	servicediscovery "github.com/sebastianopriscan/GNCFD_demos/peers_discovery/service_discovery"
@@ -30,14 +31,14 @@ import (
 var clientConn *grpc.ClientConn
 var client pb_go.PeerDiscoveryClient
 
-var gncfdCore core.GNCFDCore
+var gncfdCore core.GNCFDCoreInteractionGate
 
-var gossiper *gossip.BlindCounterGossiper
+var gossiper gossip.GNCFDGossiper
 
 var ip string
 
-var peerMap lockedmap.LockedMap[guid.Guid, gossip.CommunicationChannel]
-var coreMap lockedmap.LockedMap[guid.Guid, core.GNCFDCore]
+var peerMap lockedmap.LockedMap[guid.Guid, communication.GNCFDCommunicationChannel]
+var coreMap lockedmap.LockedMap[guid.Guid, core.GNCFDCoreInteractionGate]
 
 var discover_addr, discover_port string
 var my_port string
@@ -168,8 +169,8 @@ func main() {
 		return
 	}
 
-	peerMap = lockedmap.LockedMap[guid.Guid, gossip.CommunicationChannel]{Map: make(map[guid.Guid]gossip.CommunicationChannel)}
-	coreMap = lockedmap.LockedMap[guid.Guid, core.GNCFDCore]{Map: make(map[guid.Guid]core.GNCFDCore)}
+	peerMap = lockedmap.LockedMap[guid.Guid, communication.GNCFDCommunicationChannel]{Map: make(map[guid.Guid]communication.GNCFDCommunicationChannel)}
+	coreMap = lockedmap.LockedMap[guid.Guid, core.GNCFDCoreInteractionGate]{Map: make(map[guid.Guid]core.GNCFDCoreInteractionGate)}
 
 	myGuid, err := guid.GenerateGUID()
 	if err != nil {
@@ -196,7 +197,11 @@ func main() {
 	}
 
 	gossiper = gossip.NewBlindCounterGossiper(&peerMap, gncfdCore, 2, 2)
-	gossiper.ObserveSubject(serverDesc.VivServ)
+
+	gossiperSubj, ok := gossiper.(*gossip.BlindCounterGossiper)
+	if ok {
+		gossiperSubj.ObserveSubject(serverDesc.VivServ)
+	}
 
 	gossiper.StartGossiping()
 
