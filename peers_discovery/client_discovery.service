@@ -7,7 +7,7 @@ User=ec2-user
 Group=ec2-user
 EnvironmentFile=/home/ec2-user/.bash_profile
 WorkingDirectory=/home/ec2-user/GNCFD_demos/peers_discovery
-ExecStart=/bin/bash -i -c 'go run client/clientMain.go client/analyze_vivaldi.go'
+ExecStart=/bin/bash -i -c 'go run -tags release client/clientMain.go client/analyze_vivaldi.go'
 
 [Install]
 WantedBy=multi-user.target
