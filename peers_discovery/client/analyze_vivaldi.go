@@ -10,7 +10,7 @@ import (
 
 var loops int = 0
 
-func analyze_vivaldi_core(core core.GNCFDCore) {
+func analyze_vivaldi_core(core core.GNCFDCoreInteractionGate) {
 
 	/*
 		metadata, err := core.GetStateUpdates()
