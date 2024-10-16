@@ -18,7 +18,7 @@ services:
       - gossip_demonet_debug
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 3
       endpoint_mode: dnssr
     env_file:
       - .env_compose_debug

@@ -143,7 +143,7 @@ func createCore(session *servicediscovery.Session, me *guid.Guid) error {
 
 	myCoords := make([]float64, dim)
 
-	gncfdCore, err = vivaldi.NewVivaldiCore(*me, myCoords, space, 0.001, 0.001)
+	gncfdCore, err = vivaldi.NewVivaldiCore(*me, myCoords, space, 0.001, 0.1)
 	if err != nil {
 		return fmt.Errorf("error creating core, details: %s", err)
 	}
